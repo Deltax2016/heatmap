@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>EcoRouting Heatmap</title>
+    <style>
+      body, html { margin:0; padding:0; height:100%;}
+      body { font-family:sans-serif; }
+      body * { font-weight:200;}
+      h1 { position:absolute; background:white; padding:10px;}
+      #map { height:100%; }
+      .leaflet-container {
+        background: rgba(0,0,0,.8) !important;
+      }
+      h1 { position:absolute; background:black; color:white; padding:10px; font-weight:200; z-index:10000;}
+      #all-examples-info { position:absolute; background:white; font-size:16px; padding:20px; top:100px; width:350px; line-height:150%; border:1px solid rgba(0,0,0,.2);}
+    </style>
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+    <script src="heatmap.js"></script>
+    <script src="leaflet-heatmap.js"></script>
+  </head>
+  <body>
+
+    
+    <div class="btn-group btn-group-toggle" style="margin-top:30px; margin-left:40px; position:absolute;z-index: 1000000;" data-toggle="buttons">
+        <button class="btn btn-primary" name="options" id="option1" autocomplete="off" onclick="setFirst()" checked> CO2
+        <button class="btn btn-primary" name="options" id="option2" autocomplete="off" onclick="setSecond()"> AQI
+    </div>
+    <div id="map"></div>
+    <script>
+        var dt = {
+  "CO2": [
+    {
+      "count": 2,
+      "lat": 55.761761,
+      "lng": 37.55946
+    },
+    {
+      "count": 3,
+      "lat": 55.759846,
+      "lng": 37.581631
+    },
+    {
+      "count": 1,
+      "lat": 55.734856,
+      "lng": 37.560484
+    },
+    {
+      "count": 4,
+      "lat": 55.350581,
+      "lng": 37.334783
+    },
+    {
+      "count": 3,
+      "lat": 55.707644,
+      "lng": 37.749283
+    },
+    {
+      "count": 4,
+      "lat": 55.712137,
+      "lng": 37.545168
+    },
+    {
+      "count": 1,
+      "lat": 55.772072,
+      "lng": 37.695061
+    },
+    {
+      "count": 2,
+      "lat": 55.875935,
+      "lng": 37.547728
+    },
+    {
+      "count": 2,
+      "lat": 55.767965,
+      "lng": 37.52421
+    },
+    {
+      "count": 4,
+      "lat": 55.641249,
+      "lng": 37.683203
+    },
+    {
+      "count": 3,
+      "lat": 55.744596,
+      "lng": 37.829027
+    },
+    {
+      "count": 2,
+      "lat": 55.821674,
+      "lng": 37.607412
+    },
+    {
+      "count": 3,
+      "lat": 55.739529,
+      "lng": 37.644288
+    },
+    {
+      "count": 4,
+      "lat": 55.748711,
+      "lng": 37.61697
+    },
+    {
+      "count": 3,
+      "lat": 55.883944,
+      "lng": 37.441925
+    },
+    {
+      "count": 2,
+      "lat": 55.735013,
+      "lng": 37.50911
+    },
+    {
+      "count": 3,
+      "lat": 55.711326,
+      "lng": 37.559227
+    },
+    {
+      "count": 2,
+      "lat": 55.680224,
+      "lng": 37.738216
+    },
+    {
+      "count": 1,
+      "lat": 55.70915,
+      "lng": 37.364167
+    },
+    {
+      "count": 4,
+      "lat": 55.71408,
+      "lng": 37.512982
+    },
+    {
+      "count": 1,
+      "lat": 55.753676,
+      "lng": 37.611751
+    },
+    {
+      "count": 1,
+      "lat": 55.749836,
+      "lng": 37.552885
+    },
+    {
+      "count": 2,
+      "lat": 55.685046,
+      "lng": 37.661392
+    },
+    {
+      "count": 3,
+      "lat": 55.757536,
+      "lng": 37.598438
+    },
+    {
+      "count": 3,
+      "lat": 55.728378,
+      "lng": 37.5524
+    },
+    {
+      "count": 3,
+      "lat": 55.752658,
+      "lng": 37.587227
+    },
+    {
+      "count": 4,
+      "lat": 55.767544,
+      "lng": 37.617743
+    },
+    {
+      "count": 2,
+      "lat": 55.681671,
+      "lng": 37.515353
+    },
+    {
+      "count": 2,
+      "lat": 55.649525,
+      "lng": 37.532511
+    },
+    {
+      "count": 2,
+      "lat": 55.737841,
+      "lng": 37.628137
+    },
+    {
+      "count": 3,
+      "lat": 55.766638,
+      "lng": 37.626663
+    },
+    {
+      "count": 2,
+      "lat": 55.772988,
+      "lng": 37.608454
+    },
+    {
+      "count": 4,
+      "lat": 55.773722,
+      "lng": 37.616629
+    },
+    {
+      "count": 3,
+      "lat": 55.743593,
+      "lng": 37.6615
+    },
+    {
+      "count": 3,
+      "lat": 55.766152,
+      "lng": 37.634703
+    },
+    {
+      "count": 2,
+      "lat": 55.766364,
+      "lng": 37.609505
+    },
+    {
+      "count": 3,
+      "lat": 55.739737,
+      "lng": 37.664303
+    },
+    {
+      "count": 3,
+      "lat": 55.763923,
+      "lng": 37.606442
+    },
+    {
+      "count": 4,
+      "lat": 55.770476,
+      "lng": 37.622199
+    },
+    {
+      "count": 1,
+      "lat": 55.810081,
+      "lng": 37.795645
+    },
+    {
+      "count": 4,
+      "lat": 55.762844,
+      "lng": 37.774903
+    }
+  ],
+  "AQI": [
+    {
+      "count": 2,
+      "lat": 55.761761,
+      "lng": 37.55946
+    },
+    {
+      "count": 3,
+      "lat": 55.759846,
+      "lng": 37.581631
+    },
+    {
+      "count": 1,
+      "lat": 55.734856,
+      "lng": 37.560484
+    },
+    {
+      "count": 4,
+      "lat": 55.350581,
+      "lng": 37.334783
+    },
+    {
+      "count": 3,
+      "lat": 55.707644,
+      "lng": 37.749283
+    },
+    {
+      "count": 4,
+      "lat": 55.712137,
+      "lng": 37.545168
+    },
+    {
+      "count": 1,
+      "lat": 55.772072,
+      "lng": 37.695061
+    },
+    {
+      "count": 2,
+      "lat": 55.875935,
+      "lng": 37.547728
+    },
+    {
+      "count": 2,
+      "lat": 55.767965,
+      "lng": 37.52421
+    },
+    {
+      "count": 4,
+      "lat": 55.641249,
+      "lng": 37.683203
+    },
+    {
+      "count": 3,
+      "lat": 55.744596,
+      "lng": 37.829027
+    },
+    {
+      "count": 2,
+      "lat": 55.821674,
+      "lng": 37.607412
+    },
+    {
+      "count": 3,
+      "lat": 55.739529,
+      "lng": 37.644288
+    },
+    {
+      "count": 4,
+      "lat": 55.748711,
+      "lng": 37.61697
+    },
+    {
+      "count": 3,
+      "lat": 55.883944,
+      "lng": 37.441925
+    },
+    {
+      "count": 2,
+      "lat": 55.735013,
+      "lng": 37.50911
+    },
+    {
+      "count": 3,
+      "lat": 55.711326,
+      "lng": 37.559227
+    },
+    {
+      "count": 2,
+      "lat": 55.680224,
+      "lng": 37.738216
+    },
+    {
+      "count": 1,
+      "lat": 55.70915,
+      "lng": 37.364167
+    },
+    {
+      "count": 4,
+      "lat": 55.71408,
+      "lng": 37.512982
+    },
+    {
+      "count": 1,
+      "lat": 55.753676,
+      "lng": 37.611751
+    },
+    {
+      "count": 1,
+      "lat": 55.749836,
+      "lng": 37.552885
+    },
+    {
+      "count": 2,
+      "lat": 55.685046,
+      "lng": 37.661392
+    },
+    {
+      "count": 3,
+      "lat": 55.757536,
+      "lng": 37.598438
+    },
+    {
+      "count": 3,
+      "lat": 55.728378,
+      "lng": 37.5524
+    },
+    {
+      "count": 3,
+      "lat": 55.752658,
+      "lng": 37.587227
+    },
+    {
+      "count": 4,
+      "lat": 55.767544,
+      "lng": 37.617743
+    },
+    {
+      "count": 2,
+      "lat": 55.681671,
+      "lng": 37.515353
+    },
+    {
+      "count": 2,
+      "lat": 55.649525,
+      "lng": 37.532511
+    },
+    {
+      "count": 2,
+      "lat": 55.737841,
+      "lng": 37.628137
+    },
+    {
+      "count": 3,
+      "lat": 55.766638,
+      "lng": 37.626663
+    },
+    {
+      "count": 2,
+      "lat": 55.772988,
+      "lng": 37.608454
+    },
+    {
+      "count": 4,
+      "lat": 55.773722,
+      "lng": 37.616629
+    },
+    {
+      "count": 3,
+      "lat": 55.743593,
+      "lng": 37.6615
+    },
+    {
+      "count": 3,
+      "lat": 55.766152,
+      "lng": 37.634703
+    },
+    {
+      "count": 2,
+      "lat": 55.766364,
+      "lng": 37.609505
+    },
+    {
+      "count": 3,
+      "lat": 55.739737,
+      "lng": 37.664303
+    },
+    {
+      "count": 3,
+      "lat": 55.763923,
+      "lng": 37.606442
+    },
+    {
+      "count": 4,
+      "lat": 55.770476,
+      "lng": 37.622199
+    },
+    {
+      "count": 1,
+      "lat": 55.810081,
+      "lng": 37.795645
+    },
+    {
+      "count": 4,
+      "lat": 55.762844,
+      "lng": 37.774903
+    }
+  ]
+};
+        function setFirst() {
+            var data = {
+                max: 42,
+                data: dt.CO2
+            };
+
+            heatmapLayer.setData(data);
+            layer = heatmapLayer;
+        }
+
+        function setSecond() {
+            var data = {
+                max: 42,
+                data: dt.AQI
+            };
+
+            heatmapLayer.setData(data);
+            layer = heatmapLayer;
+            console.log('data');
+        }
+
+        fetch('https://64cd-62-84-117-254.ngrok.io/get_co2')
+        .then(response => response.json())
+        .then(data => {console.log(data);dt = data});
+
+        var data = {
+          max: 42,
+          data: dt.CO2
+        };
+
+        var baseLayer = L.tileLayer(
+          'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+            attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
+            maxZoom: 18
+          }
+        );
+
+        var cfg = {
+          "radius": 0.02,
+          "maxOpacity": 0.6, 
+          "scaleRadius": true, 
+          "useLocalExtrema": true,
+          latField: 'lat',
+          lngField: 'lng',
+          valueField: 'count'
+        };
+
+
+        var heatmapLayer = new HeatmapOverlay(cfg);
+
+        var map = new L.Map('map', {
+          center: new L.LatLng(55.762453, 37.611589),
+          zoom: 11,
+          layers: [baseLayer, heatmapLayer]
+        });
+
+
+        heatmapLayer.setData(data);
+        layer = heatmapLayer;
+    </script>
+  </body>
+</html>
